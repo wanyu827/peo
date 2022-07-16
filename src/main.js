@@ -35,7 +35,12 @@ Vue.use(ElementUI, { locale })
 // Vue.use(ElementUI)
 
 Vue.config.productionTip = false
-
+// 批量导入自定义指令 作用可以简化指令写法
+// 可以把所有的按需导出的全部导入到一个对象中
+import * as directives from '@/directives'
+Object.keys(directives).forEach(item => {
+  Vue.directive(item, directives[item])
+})
 new Vue({
   el: '#app',
   router,
