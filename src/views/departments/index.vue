@@ -1,11 +1,20 @@
 <template>
   <div class="dashboard-container">
     <div class="app-container">
-      <el-card>
+      <el-card
+        v-loading="isLoading"
+        style="min-height: 700px"
+        element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(0, 0, 0, 0.8)"
+      >
         <el-tabs>
           <el-tab-pane label="组织架构" style="">
             <!-- 用了一个行列布局 -->
-            <TreeItem :node="titleObj"></TreeItem>
+            <TreeItem
+              :node="titleObj"
+              @delDepartment="getDepartmentsList"
+            ></TreeItem>
             <el-tree :data="data" default-expand-all>
               <template v-slot="scope">
                 <TreeItem
@@ -30,7 +39,9 @@ export default {
   data () {
     return {
       data: [],
-      titleObj: {}
+      titleObj: {},
+      isLoading: true
+
     }
   },
   computed: {},
@@ -52,6 +63,7 @@ export default {
       }
       this.data = transferListToTree(res.depts, '')
       this.titleObj = res.depts[0]
+      this.isLoading = false
     }
   }
 }

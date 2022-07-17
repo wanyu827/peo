@@ -32,37 +32,68 @@
     </el-row>
 
     <el-dialog
-      title="新增部门"
+      :title="title"
       :visible.sync="addDialogVisible"
       width="50%"
       @click.native.stop
+      @close="handleClose"
     >
-      <el-form label-width="100px">
-        <el-form-item label="部门名称">
-          <el-input placeholder="1-50个字符"></el-input>
+      <el-form
+        ref="addFormRef"
+        label-width="100px"
+        :model="addDepartmentForm"
+        :rules="rules"
+      >
+        <el-form-item label="部门名称" prop="name">
+          <el-input
+            v-model="addDepartmentForm.name"
+            placeholder="1-50个字符"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="部门编码">
-          <el-input placeholder="1-50个字符"></el-input>
+        <el-form-item label="部门编码" prop="code">
+          <el-input
+            v-model="addDepartmentForm.code"
+            placeholder="1-50个字符"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="部门负责人">
-          <el-input placeholder="请选择负责人"></el-input>
+        <el-form-item label="部门负责人" prop="manager">
+          <!-- <el-input
+            v-model="addDepartmentForm.manager"
+            placeholder="请选择负责人"
+          ></el-input> -->
+          <el-select
+            v-model="addDepartmentForm.manager"
+            placeholder="请选择"
+            style="width: 100%"
+            filterable
+          >
+            <el-option
+              v-for="item in users"
+              :key="item.id"
+              :label="item.username"
+              :value="item.username"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="部门介绍">
-          <el-input placeholder="1-300个字符" type="textarea"></el-input>
+        <el-form-item label="部门介绍" prop="introduce">
+          <el-input
+            v-model="addDepartmentForm.introduce"
+            placeholder="1-300个字符"
+            type="textarea"
+          ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addDialogVisible = false">
-          确 定
-        </el-button>
+        <el-button type="primary" @click="onSubmit"> 确 定 </el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { delDepartment } from '@/api/departments'
+import { delDepartment, addDepartment, getDepartmentsList, editDepartment } from '@/api/departments'
+import { getSimpleUserList } from '@/api/user'
 export default {
   name: 'TreeItem',
   filters: {},
@@ -74,6 +105,18 @@ export default {
     }
   },
   data () {
+    const validateName = async (rule, value, callback) => {
+      const res = await getDepartmentsList()
+      if (this.isEdit) {
+        const pid = this.node.data.pid
+        console.log(this.node.data)
+        console.log(res)
+        res.depts.filter(item => item.pid === pid && item.id !== this.node.data.id).some(item => item.name === value) ? callback(new Error('部门名称重复')) : callback()
+      } else {
+        const id = this.node.data ? this.node.data.id : ''
+        res.depts.filter(item => item.pid === id).some(item => item.name === value) ? callback(new Error('部门名称重复')) : callback()
+      }
+    }
     return {
       addDialogVisible: false,
       addDepartmentForm: {
@@ -81,20 +124,38 @@ export default {
         code: '', // 部门编码
         manager: '', // 负责人
         introduce: ''// 介绍
-
-      }
+      },
+      rules: {
+        name: [
+          { required: true, message: '部门名称不能为空', trigger: 'blur' },
+          { min: 3, max: 10, message: '长度3-10', trigger: 'blur' },
+          { validator: validateName, trigger: 'change' }
+        ]
+      },
+      users: [],
+      isEdit: false
     }
   },
-  computed: {},
+  computed: {
+    title () {
+      return this.isEdit ? '编辑部门' : '新增部门'
+    }
+  },
   watch: {},
   created () { },
   methods: {
     async onCommand (key) {
+      if (this.users.length === 0) {
+        this.getSimpleUserList()
+      }
+      this.isEdit = false
       if (key === 'a') {
         this.addDialogVisible = true
-        console.log('添加')
       } else if (key === 'b') {
+        this.isEdit = true
+        this.addDialogVisible = true
         console.log('编辑')
+        this.addDepartmentForm = { ...this.node.data }
       } else {
         try {
           await this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -114,6 +175,25 @@ export default {
           })
         }
       }
+    },
+    async getSimpleUserList () {
+      const res = await getSimpleUserList()
+      console.log(res)
+      this.users = res
+    },
+    handleClose () {
+      this.$refs.addFormRef.resetFields() // 重置表单
+    },
+    async onSubmit () {
+      if (this.isEdit) {
+        delete this.addDepartmentForm.children
+        await editDepartment(this.addDepartmentForm)
+      } else {
+        this.addDepartmentForm.pid = this.node.data ? this.node.data.id : ''
+        await addDepartment(this.addDepartmentForm)
+      }
+      this.addDialogVisible = false
+      this.$emit('delDepartment')
     }
   }
 }
