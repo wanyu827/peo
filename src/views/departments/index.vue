@@ -27,6 +27,8 @@
         </el-tabs>
       </el-card>
     </div>
+    <!-- 返回顶部 -->
+    <el-backtop></el-backtop>
   </div>
 </template>
 

@@ -39,7 +39,8 @@ module.exports = {
     // 反向代理
     proxy: {
       'abc': {
-        target: 'http://ihrm.itheima.net/',
+        // http://ihrm.itheima.net/
+        target: 'http://ihrm-java.itheima.net/',
         changeOrigin: true,
         pathRewrite: {
           '^/abc': ''

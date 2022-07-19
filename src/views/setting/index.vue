@@ -1,15 +1,29 @@
 <template>
   <div class="dashboard-container">
-    <div class="app-container">公司设置</div>
+    <div class="app-container">
+      <el-card>
+        <el-tabs v-model="activeName">
+          <!-- 角色管理 -->
+          <el-tab-pane label="角色管理" name="first">
+            <RoleManage></RoleManage>
+          </el-tab-pane>
+          <!-- 公司信息 -->
+          <el-tab-pane label="公司信息" name="second">公司信息</el-tab-pane>
+        </el-tabs>
+      </el-card>
+    </div>
   </div>
 </template>
 
 <script>
+import RoleManage from './components/RoleManage.vue'
 export default {
   filters: {},
-  components: {},
+  components: { RoleManage },
   data () {
-    return {}
+    return {
+      activeName: 'first'
+    }
   },
   computed: {},
   watch: {},
