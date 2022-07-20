@@ -1,6 +1,14 @@
 <template>
   <div>
-    <el-button type="primary" size="mini" @click="roleVisible = true">
+    <el-button
+      type="primary"
+      size="mini"
+      @click="
+        roleVisible = true;
+        isEdit = false;
+        addRoleForm = {};
+      "
+    >
       添加角色
     </el-button>
     <el-table :data="roleList" border>
@@ -21,7 +29,9 @@
           <el-button type="text" @click="showRightDialog(scope.row.id)">
             分配权限
           </el-button>
-          <el-button type="text">修改</el-button>
+          <el-button type="text" @click="showRoleDialog(scope.row)">
+            修改
+          </el-button>
           <el-button type="text" @click="del(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
@@ -58,7 +68,11 @@
       </el-pagination>
     </el-row>
     <!-- 新增角色对话框 -->
-    <el-dialog title="新增角色" :visible.sync="roleVisible" @close="reset">
+    <el-dialog
+      :title="isEdit ? '编辑' : '新增角色'"
+      :visible.sync="roleVisible"
+      @close="reset"
+    >
       <el-form
         ref="addRoleFormRef"
         label-width="80px"
@@ -81,7 +95,7 @@
 </template>
 
 <script>
-import { getRoleList, delRole, addRole } from '@/api/setting'
+import { getRoleList, delRole, addRole, editRole } from '@/api/setting'
 import { getPermissions, getPermissionsById, assignPermission } from '@/api/permission'
 import { tranferListToTree } from '@/utils/index'
 export default {
@@ -109,7 +123,8 @@ export default {
         name: [
           { required: true, message: '角色名称不能为空', trigger: 'blur' }
         ]
-      }
+      },
+      isEdit: false
     }
   },
   computed: {},
@@ -172,12 +187,23 @@ export default {
         if (!bool) {
           this.$message.error('表单数据非法')
         }
-        await addRole(this.addRoleForm)
+        if (this.isEdit) {
+          await editRole(this.addRoleForm)
+        } else {
+          await addRole(this.addRoleForm)
+        }
         this.getRoleList()
+        this.roleVisible = false
       })
     },
     reset () {
       this.$refs.addRoleFormRef.resetFields()
+    },
+    showRoleDialog (row) {
+      this.isEdit = true
+      this.roleVisible = true
+      this.addRoleForm = { ...row } // 浅拷贝
+      // this.form = Object.assignA({},row)
     }
   }
 }

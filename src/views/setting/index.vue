@@ -8,7 +8,9 @@
             <RoleManage></RoleManage>
           </el-tab-pane>
           <!-- 公司信息 -->
-          <el-tab-pane label="公司信息" name="second">公司信息</el-tab-pane>
+          <el-tab-pane label="公司信息" name="second">
+            <CompanyInfo></CompanyInfo>
+          </el-tab-pane>
         </el-tabs>
       </el-card>
     </div>
@@ -17,9 +19,10 @@
 
 <script>
 import RoleManage from './components/RoleManage.vue'
+import CompanyInfo from './components/CompanyInfo.vue'
 export default {
   filters: {},
-  components: { RoleManage },
+  components: { RoleManage, CompanyInfo },
   data () {
     return {
       activeName: 'first'
