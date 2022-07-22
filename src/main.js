@@ -41,8 +41,13 @@ import * as directives from '@/directives'
 Object.keys(directives).forEach(item => {
   Vue.directive(item, directives[item])
 })
+import * as filters from '@/filters'
+Object.keys(filters).forEach(item => {
+  Vue.filter(item, filters[item])
+})
 
 import components from './components'
+
 Vue.use(components)
 new Vue({
   el: '#app',
