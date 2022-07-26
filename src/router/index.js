@@ -159,7 +159,8 @@ const asyncRoutes = [
     children: [{
       path: '',
       name: 'EmployeeDetail',
-      component: () => import('@/views/employees/detail.vue')
+      component: () => import('@/views/employees/detail.vue'),
+      props: true
     }]
   }
 ]

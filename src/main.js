@@ -47,7 +47,10 @@ Object.keys(filters).forEach(item => {
 })
 
 import components from './components'
-
+// 打印的插件
+import Print from 'vue-print-nb'
+// Global instruction
+Vue.use(Print)
 Vue.use(components)
 new Vue({
   el: '#app',
