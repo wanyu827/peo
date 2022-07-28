@@ -60,13 +60,13 @@ export const constantRoutes = [
 ]
 
 // 动态路由
-const asyncRoutes = [
+export const asyncRoutes = [
   {
     path: '/approvals',
     component: Layout,
     children: [{
       path: '',
-      name: 'Approvals',
+      name: 'approvals',
       component: () => import('@/views/approvals/index'),
       meta: { title: '审批', icon: 'tree-table' }
     }]
@@ -76,7 +76,7 @@ const asyncRoutes = [
     component: Layout,
     children: [{
       path: '',
-      name: 'Attendances',
+      name: 'attendances',
       component: () => import('@/views/attendances/index'),
       meta: { title: '考勤', icon: 'skill' }
     }]
@@ -86,7 +86,7 @@ const asyncRoutes = [
     component: Layout,
     children: [{
       path: '',
-      name: 'Departments',
+      name: 'departments',
       component: () => import('@/views/departments/index'),
       meta: { title: '组织架构', icon: 'tree' }
     }]
@@ -96,7 +96,7 @@ const asyncRoutes = [
     component: Layout,
     children: [{
       path: '',
-      name: 'Employees',
+      name: 'employees',
       component: () => import('@/views/employees/index'),
       meta: { title: '员工', icon: 'people' }
     }]
@@ -107,7 +107,7 @@ const asyncRoutes = [
     component: Layout,
     children: [{
       path: '',
-      name: 'Permission',
+      name: 'permissions',
       component: () => import('@/views/permission/index'),
       meta: { title: '权限管理', icon: 'lock' }
     }]
@@ -117,7 +117,7 @@ const asyncRoutes = [
     component: Layout,
     children: [{
       path: '',
-      name: 'Salarys',
+      name: 'salarys',
       component: () => import('@/views/salarys/index'),
       meta: { title: '工资', icon: 'money' }
     }]
@@ -127,7 +127,7 @@ const asyncRoutes = [
     component: Layout,
     children: [{
       path: '',
-      name: 'Setting',
+      name: 'settings',
       component: () => import('@/views/setting/index'),
       meta: { title: '设置', icon: 'setting' }
     }]
@@ -137,7 +137,7 @@ const asyncRoutes = [
     component: Layout,
     children: [{
       path: '',
-      name: 'Social',
+      name: 'social_securitys',
       component: () => import('@/views/social/index'),
       meta: { title: '社保', icon: 'table' }
     }]

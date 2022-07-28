@@ -6,7 +6,7 @@ import 'nprogress/nprogress.css'
 const whiteList = ['/login', '/404']
 // to去哪 from 来自哪里 next 放行
 // 前置路由守卫
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   // 开启进度条效果
   Nprogress.start()
   // 权限控制
@@ -19,7 +19,10 @@ router.beforeEach((to, from, next) => {
     } else {
       if (!store.getters.userInfo.id) {
         // 当用户手里有token，并且访问的不是登录页面，那就请求个人资料
-        store.dispatch('user/getInfo')
+        const userInfo = await store.dispatch('user/getInfo')
+        // 当前账号能访问到的权限点
+        // console.log(userInfo.roles.menus) // | store.state.user.userInfo
+        store.dispatch('permissions/filter', userInfo.roles.menus)
       }
       next()// 放行
     }
