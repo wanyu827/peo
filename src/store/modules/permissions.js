@@ -10,8 +10,9 @@ const mutations = {
 }
 const actions = {
   filter (context, menus) {
-    const newRoutes = asyncRoutes.filter(item => menus.includes(item.children[0].name))
+    const newRoutes = asyncRoutes.filter(item => menus.includes(item.meta.name))
     context.commit('setRoutes', [...constantRoutes, ...newRoutes])
+    return newRoutes
   }
 }
 export default {

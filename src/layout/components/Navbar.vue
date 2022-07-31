@@ -13,6 +13,25 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
+      <el-dropdown
+        trigger="click"
+        style="margin-right: 20px"
+        @command="handleCommond"
+      >
+        <span
+          ><svg-icon
+            icon-class="language"
+            style="color: #fff; font-size: 20px"
+          ></svg-icon
+        ></span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="zh" :disabled="isZh"
+            >中文</el-dropdown-item
+          >
+          <el-dropdown-item command="en" :disabled="!isZh">en</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img v-imgerror :src="avatar" class="user-avatar" />
@@ -39,11 +58,16 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-
+import i18n from '@/lang'
 export default {
   components: {
 
     Hamburger, Breadcrumb
+  },
+  data () {
+    return {
+      isZh: true
+    }
   },
   computed: {
     ...mapGetters([
@@ -52,6 +76,7 @@ export default {
       'name'
     ])
   },
+
   methods: {
     toggleSideBar () {
       this.$store.dispatch('app/toggleSideBar')
@@ -59,6 +84,12 @@ export default {
     async logout () {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    handleCommond (command) {
+      // console.log(command)
+      i18n.locale = command
+      this.isZh = command === 'zh'
+      this.$message.success('多语言切换成功')
     }
   }
 }
@@ -149,7 +180,7 @@ export default {
   cursor: pointer;
   width: 30px;
   height: 30px;
-  border-radius: 15px;
+  border-radius: 50px;
   vertical-align: middle;
 }
 .name {

@@ -22,7 +22,9 @@ router.beforeEach(async (to, from, next) => {
         const userInfo = await store.dispatch('user/getInfo')
         // 当前账号能访问到的权限点
         // console.log(userInfo.roles.menus) // | store.state.user.userInfo
-        store.dispatch('permissions/filter', userInfo.roles.menus)
+        const newRoutes = await store.dispatch('permissions/filter', userInfo.roles.menus)
+        router.addRoutes([...newRoutes, { path: '*', redirect: '/404', hidden: true }])
+        next(to.path)
       }
       next()// 放行
     }

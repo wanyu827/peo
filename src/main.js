@@ -46,15 +46,21 @@ Object.keys(filters).forEach(item => {
   Vue.filter(item, filters[item])
 })
 
+import mixins from '@/mixins'
+Vue.mixin(mixins)
+
 import components from './components'
 // 打印的插件
 import Print from 'vue-print-nb'
 // Global instruction
+
+import i18n from '@/lang'
 Vue.use(Print)
 Vue.use(components)
 new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   render: h => h(App)
 })
