@@ -32,7 +32,9 @@ import '@/permission' // permission control 权限控制
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
-Vue.use(ElementUI)
+Vue.use(ElementUI, {
+  i18n: (key, value) => i18n.t(key, value)
+})
 
 Vue.config.productionTip = false
 // 批量导入自定义指令 作用可以简化指令写法
@@ -53,7 +55,8 @@ import components from './components'
 // 打印的插件
 import Print from 'vue-print-nb'
 // Global instruction
-
+import TagsView from '@/components/TagsView'
+Vue.component('TagsView', TagsView)
 import i18n from '@/lang'
 Vue.use(Print)
 Vue.use(components)

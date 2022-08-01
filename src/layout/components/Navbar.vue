@@ -18,20 +18,23 @@
         style="margin-right: 20px"
         @command="handleCommond"
       >
-        <span
+        <span style="cursor: pointer"
           ><svg-icon
             icon-class="language"
             style="color: #fff; font-size: 20px"
           ></svg-icon
         ></span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="zh" :disabled="isZh"
-            >中文</el-dropdown-item
-          >
-          <el-dropdown-item command="en" :disabled="!isZh">en</el-dropdown-item>
+          <el-dropdown-item command="zh">中文</el-dropdown-item>
+          <el-dropdown-item command="en">en</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-
+      <!-- 全屏 -->
+      <FullScreen></FullScreen>
+      <!-- 主题 -->
+      <theme-picker
+        style="height: 46px; vertical-align: bottom; margin-right: 10px"
+      />
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img v-imgerror :src="avatar" class="user-avatar" />
@@ -59,14 +62,16 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import i18n from '@/lang'
+import Cookies from 'js-cookie'
+import ThemePicker from '@/components/ThemePicker'
 export default {
   components: {
 
-    Hamburger, Breadcrumb
+    Hamburger, Breadcrumb, ThemePicker
   },
   data () {
     return {
-      isZh: true
+
     }
   },
   computed: {
@@ -88,7 +93,7 @@ export default {
     handleCommond (command) {
       // console.log(command)
       i18n.locale = command
-      this.isZh = command === 'zh'
+      Cookies.set('locale', command)
       this.$message.success('多语言切换成功')
     }
   }
